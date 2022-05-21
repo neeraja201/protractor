@@ -13,14 +13,22 @@ describe('Protractor Sample Test', () => {
         });
         element(by.id('gobutton')).click();
     }
-    it('All', () => {
-        browser.get("http://juliemr.github.io/protractor-demo");
 
-        doOperation(2, 3, "ADDITION");
-        doOperation(5, 8, "MULTIPLICATION");
-        doOperation(49, 7, "DIVISION");
-        doOperation(8, 4, "SUBTRACTION");
+    var objectDataProvider = {
+        'First params': { a: 2, b: 3, result: 5, operator: "ADDITION" },
+        'Second params': { a: 5, b: 8, result: 40, operator: "MULTIPLICATION" },
+        'Third params': { a: 49, b: 7, result: 7, operator: "DIVISION" },
+        'fourth params': { a: 8, b: 4, result: 4, operator: "SUBTRACTION" }
+    };
+    using(objectDataProvider, function (data, description) {
+        it('testing caluclator with operator ' + description, () => {
+            browser.get("http://juliemr.github.io/protractor-demo");
+            doOperation(data.a, data.b, data.operator);
+            expect(element(by.css("h2[class='ng-binding']")).getText()).toBe(data.result);{}
+        });
+    });
 
+    it('testing count and get result from all rows', () => {
         element.all(by.repeater('result in memory')).count().then(function (count) {
             console.log(count);
         });
@@ -30,7 +38,5 @@ describe('Protractor Sample Test', () => {
                 console.log(text);
             })
         });
-        //expect(element(by.css("h2[class='ng-binding']")).getText()).toBe("8");{}
-
     });
 });
